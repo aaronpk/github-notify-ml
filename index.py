@@ -777,7 +777,7 @@ def _sendMail(config, from_addr, to_addr, subject, message):
         with smtp(config["SMTP_HOST"], port=config["SMTP_PORT"], timeout=timeout) as server:
             if "SMTP_TLS" in config:
                 server.ehlo()
-                context = ssl.SSLContext(ssl.PROTOCOL_TLS)
+                context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
                 server.starttls(context=context)
                 server.ehlo()
             if "SMTP_USERNAME" in config:
