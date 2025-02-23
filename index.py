@@ -826,6 +826,7 @@ def getConfig():
         "GH_OAUTH_TOKEN",
         "SMTP_SSL",
         "SMTP_TLS",
+        "SMTP_TLS_NOVERIFY",
         "SMTP_HOST",
         "EMAIL_FROM",
         "SMTP_USERNAME",
