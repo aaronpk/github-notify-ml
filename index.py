@@ -789,6 +789,13 @@ def _sendMail(config, from_addr, to_addr, subject, message):
                 if hasattr(ssl, "VERIFY_X509_PARTIAL_CHAIN"):
                     context.verify_flags = context.verify_flags & ~ssl.VERIFY_X509_PARTIAL_CHAIN
 
+                if "SMTP_TLS_NOVERIFY" in config:
+                    warnings.warn(
+                        "Disable TLS verification for SMTP connection"
+                    )
+                    context.check_hostname = False
+                    context.verify_mode = ssl.CERT_NONE
+
                 server.starttls(context=context)
                 server.ehlo()
             if "SMTP_USERNAME" in config:
