@@ -13,6 +13,7 @@ import requests_cache
 import ipaddress
 import smtplib
 import ssl
+import warnings
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.header import Header
@@ -778,6 +779,16 @@ def _sendMail(config, from_addr, to_addr, subject, message):
             if "SMTP_TLS" in config:
                 server.ehlo()
                 context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+
+                warnings.warn(
+                    "Disabling VERIFY_X509_STRICT and VERIFY_X509_PARTIAL_CHAIN in create_default_context().\n"
+                    "This reverts Python 3.13's stricter SSL checks. Use only if you cannot fix the SMTP server certificate!"
+                )
+                if hasattr(ssl, "VERIFY_X509_STRICT"):
+                    context.verify_flags = context.verify_flags & ~ssl.VERIFY_X509_STRICT
+                if hasattr(ssl, "VERIFY_X509_PARTIAL_CHAIN"):
+                    context.verify_flags = context.verify_flags & ~ssl.VERIFY_X509_PARTIAL_CHAIN
+
                 server.starttls(context=context)
                 server.ehlo()
             if "SMTP_USERNAME" in config:
